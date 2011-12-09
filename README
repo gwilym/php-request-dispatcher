@@ -1,7 +1,1 @@
-this should be able to be dropped anywhere and just start working though you may need to do the following (assuming apache):
-
-- rename "htaccess.example" to .htaccess
-- adjust RewriteBase in .htaccess to suit your setup
-- create directory /app/var/ and make it writable
-
-this package is licensed under the MIT license, as per http://www.opensource.org/licenses/mit-license.html, which can be read in the accompanying LICENSE file
+adjustment in progress, this repo will contain just the request handling features from gwilym-php
