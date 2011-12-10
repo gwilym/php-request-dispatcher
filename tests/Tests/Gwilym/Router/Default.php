@@ -6,7 +6,7 @@ class Tests_Gwilym_Router_Default extends UnitTestCase
 
 	protected $_routes;
 
-	public function __construct ()
+	public function __construct()
 	{
 		$this->router = new Gwilym_Router_Default();
 
@@ -28,7 +28,9 @@ class Tests_Gwilym_Router_Default extends UnitTestCase
 			'/product/1/edit/' => array('Controller_Product_' . $default, array(1, 'edit')),
 			'/product/!foo/bar/' => array('Controller_Product_' . $default, array('!foo', 'bar')),
 			'/product/foo=bar/' => array('Controller_Product_' . $default, array('foo' => 'bar')),
-			'/product/alpha/beta=gamma/delta/' => array('Controller_Product_' . $default, array('alpha', 'beta' => 'gamma', 'delta')),
+			'/product/alpha/beta=gamma/delta/' => array(
+				'Controller_Product_' . $default, array('alpha', 'beta' => 'gamma', 'delta')
+			),
 		);
 
 		// input controller/arg params and expected path outputs
@@ -43,27 +45,31 @@ class Tests_Gwilym_Router_Default extends UnitTestCase
 			array('/product/1/edit', 'Controller_Product_' . $default, array(1, 'edit')),
 			array('/product/%21foo/bar', 'Controller_Product_' . $default, array('!foo', 'bar')),
 			array('/product/foo=bar', 'Controller_Product_' . $default, array('foo' => 'bar')),
-			array('/product/alpha/beta=gamma/delta', 'Controller_Product_' . $default, array('alpha', 'beta' => 'gamma', 'delta')),
-			array('/product/alpha/delta/beta=gamma', 'Controller_Product_' . $default, array('alpha', 'delta', 'beta' => 'gamma')),
+			array(
+				'/product/alpha/beta=gamma/delta',
+				'Controller_Product_' . $default,
+				array('alpha', 'beta' => 'gamma', 'delta')
+			),
+			array(
+				'/product/alpha/delta/beta=gamma',
+				'Controller_Product_' . $default,
+				array('alpha', 'delta', 'beta' => 'gamma')
+			),
 		);
 	}
 
-	public function testRouteToUri ()
+	public function testRouteToUri()
 	{
-		foreach ($this->_routes as $route)
-		{
+		foreach ($this->_routes as $route) {
 			$uri = $route[0];
 			$controller = $route[1];
 
 			$request = new Gwilym_Request($uri);
 			$request->addRouter($this->router);
 
-			if (isset($route[2]))
-			{
+			if (isset($route[2])) {
 				$route = new Gwilym_Route($request, $controller, $route[2]);
-			}
-			else
-			{
+			} else {
 				$route = new Gwilym_Route($request, $controller);
 			}
 
@@ -72,10 +78,9 @@ class Tests_Gwilym_Router_Default extends UnitTestCase
 		}
 	}
 
-	public function testGetRouteForRequest ()
+	public function testGetRouteForRequest()
 	{
-		foreach ($this->_uris as $uri => $expected)
-		{
+		foreach ($this->_uris as $uri => $expected) {
 			$request = new Gwilym_Request($uri);
 			$request->addRouter($this->router);
 			$request->setUriParser(new Gwilym_UriParser_Fixed('', $uri));

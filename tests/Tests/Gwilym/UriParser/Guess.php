@@ -2,22 +2,21 @@
 
 class Tests_Gwilym_UriParser_Guess extends UnitTestCase
 {
-	public function testRequestUri ()
+	public function testRequestUri()
 	{
 		$parser = new Gwilym_UriParser_Guess();
 		$this->assertEqual($_SERVER['REQUEST_URI'], $parser->getRequestUri());
 	}
 
-	public function testRequestBaseDir ()
+	public function testRequestBaseDir()
 	{
 		$parser = new Gwilym_UriParser_Guess();
 		$this->assertEqual(GWILYM_PUBLIC_DIR, $parser->getRequestBaseDir());
 	}
 
-	public function testParseOnNotWindows ()
+	public function testParseOnNotWindows()
 	{
-		if (Gwilym_PHP::isWindows())
-		{
+		if (Gwilym_PHP::isWindows()) {
 			$this->skip();
 		}
 
@@ -25,16 +24,15 @@ class Tests_Gwilym_UriParser_Guess extends UnitTestCase
 		$this->skip();
 	}
 
-	public function testParseOnWindows ()
+	public function testParseOnWindows()
 	{
-		if (!Gwilym_PHP::isWindows())
-		{
+		if (!Gwilym_PHP::isWindows()) {
 			$this->skip();
 			return;
 		}
 
 		$data = array();
-		
+
 		$data[] = array(
 			'inputRequest' => '/gwilym-php/alpha/beta',
 			'inputBase' => 'C:/httpd/www/gwilym-php',

@@ -2,7 +2,7 @@
 
 class Gwilym_Request_Test extends Gwilym_Request
 {
-	public function routers ()
+	public function routers()
 	{
 		return $this->_routers;
 	}
@@ -12,19 +12,19 @@ class Tests_Gwilym_Request extends UnitTestCase
 {
 	public static $testData;
 
-	public function setUp ()
+	public function setUp()
 	{
 		self::$testData = null;
 	}
 
-	public function testRequestStartsWithNoRouters ()
+	public function testRequestStartsWithNoRouters()
 	{
 		$request = new Gwilym_Request_Test;
 		$routers = $request->routers();
 		$this->assertTrue(empty($routers));
 	}
 
-	public function testAddRouterAsInstance ()
+	public function testAddRouterAsInstance()
 	{
 		$request = new Gwilym_Request_Test;
 		$router = new Gwilym_Router_Fixed;
@@ -33,7 +33,7 @@ class Tests_Gwilym_Request extends UnitTestCase
 		$this->assertIdentical($router, $routers[0]);
 	}
 
-	public function testAddRouterAsString ()
+	public function testAddRouterAsString()
 	{
 		$request = new Gwilym_Request_Test('/');
 		$request->addRouter('Gwilym_Router_Fixed');
@@ -107,7 +107,7 @@ class Tests_Gwilym_Request extends UnitTestCase
 	}
 	*/
 
-	public function testRequestGuessesUriByDefault ()
+	public function testRequestGuessesUriByDefault()
 	{
 		$request = new Gwilym_Request_Test();
 		$parser = $request->getUriParser();
