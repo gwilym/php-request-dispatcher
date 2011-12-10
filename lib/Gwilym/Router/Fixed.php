@@ -7,11 +7,12 @@ class Gwilym_Router_Fixed extends Gwilym_Router
 	/**
 	 * Add a new URI => Controller route to this Fixed router.
 	 *
-	 * @param string $uri
+	 * @param string			$uri
 	 * @param Gwilym_Controller $controller
+	 *
 	 * @return Gwilym_Router_Fixed
 	 */
-	public function addFixedRoute ($uri, $controller)
+	public function addFixedRoute($uri, $controller)
 	{
 		$this->_routes[$uri] = $controller;
 		return $this;
@@ -23,9 +24,10 @@ class Gwilym_Router_Fixed extends Gwilym_Router
 	 * returns false for this Fixed router since URIs are arbitrarily specified instead of generated.
 	 *
 	 * @param Gwilym_Route $route
+	 *
 	 * @return string or false
 	 */
-	public function getUriForRoute (Gwilym_Route $route)
+	public function getUriForRoute(Gwilym_Route $route)
 	{
 		return false;
 	}
@@ -35,9 +37,10 @@ class Gwilym_Router_Fixed extends Gwilym_Router
 	 * resolved.
 	 *
 	 * @param Gwilym_Request $request
+	 *
 	 * @return Gwilym_Route or false
 	 */
-	public function getRouteForRequest (Gwilym_Request $request)
+	public function getRouteForRequest(Gwilym_Request $request)
 	{
 		$uri = $request->getUri();
 		foreach ($this->_routes as $routeUri => $controller) {
@@ -52,12 +55,11 @@ class Gwilym_Router_Fixed extends Gwilym_Router
 	 * Map the given Route to a Request using the rules of this Router.
 	 *
 	 * @param Gwilym_Route $route
+	 *
 	 * @return Gwilym_Request
 	 */
-	public function getRequestForRoute (Gwilym_Route $route)
+	public function getRequestForRoute(Gwilym_Route $route)
 	{
 		return false;
 	}
-
-
 }

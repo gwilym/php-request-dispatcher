@@ -1,44 +1,45 @@
 <?php
 
 /**
-* This class defines a basic uri segment -> controller route with positional and named arguments.
-*
-* This is a fallback router that will always resolve a controller. To find more specific routes first, add another more specific Router class to the RequestHandler.
-*
-* Controller detection starts before the first segment containing a character which is invalid as a class name.
-*
-* A numeric segment will be treated as an argument and so Controller_Product_1 will never be checked, only Controller_Product
-*
-* A forward slash will always separate controllers and arguments and must be escaped to be used as a character in an argument.
-*
-* Equal signs can be used to name arguments otherwise unnamed arguments will be added numerically. It is up to your controller code to decide how to handle this.
-*
-* www.example.com/foo/bar/alpha/beta/gamma
-* -> Controller_Foo_Bar_Alpha_Beta_Gamma()->action() or if not exist
-* -> Controller_Foo_Bar_Alpha_Beta(array($gamma))->action() or if not exist
-* -> Controller_Foo_Bar_Alpha(array($beta, $gamma))->action() or if not exist
-* -> etc.
-* -> Controller_Index(array($foo, $bar, ...))=>action()
-*
-* www.example.com/foo/bar/alpha,beta,gamma
-* -> Controller_Foo_Bar(array($alpha, $beta, $gamma))->action() or if not exist
-* -> Controller_Foo(array($bar, $alpha, $beta, $gamma))->action()
-* -> etc.
-*
-* www.example.com/foo/bar/alpha=beta/gamma/delta
-* -> Controller_Foo_Bar(array(0=>$gamma, 1=>delta, $alpha=>$beta))->action() or if not exist
-* -> Controller_Foo(array(0=>$bar, 1=>$gamma, 2=>delta, $alpha=>$beta))->action() or if not exist
-* -> etc.
-*/
+ * This class defines a basic uri segment -> controller route with positional and named arguments.
+ *
+ * This is a fallback router that will always resolve a controller. To find more specific routes first, add another more specific Router class to the RequestHandler.
+ *
+ * Controller detection starts before the first segment containing a character which is invalid as a class name.
+ *
+ * A numeric segment will be treated as an argument and so Controller_Product_1 will never be checked, only Controller_Product
+ *
+ * A forward slash will always separate controllers and arguments and must be escaped to be used as a character in an argument.
+ *
+ * Equal signs can be used to name arguments otherwise unnamed arguments will be added numerically. It is up to your controller code to decide how to handle this.
+ *
+ * www.example.com/foo/bar/alpha/beta/gamma
+ * -> Controller_Foo_Bar_Alpha_Beta_Gamma()->action() or if not exist
+ * -> Controller_Foo_Bar_Alpha_Beta(array($gamma))->action() or if not exist
+ * -> Controller_Foo_Bar_Alpha(array($beta, $gamma))->action() or if not exist
+ * -> etc.
+ * -> Controller_Index(array($foo, $bar, ...))=>action()
+ *
+ * www.example.com/foo/bar/alpha,beta,gamma
+ * -> Controller_Foo_Bar(array($alpha, $beta, $gamma))->action() or if not exist
+ * -> Controller_Foo(array($bar, $alpha, $beta, $gamma))->action()
+ * -> etc.
+ *
+ * www.example.com/foo/bar/alpha=beta/gamma/delta
+ * -> Controller_Foo_Bar(array(0=>$gamma, 1=>delta, $alpha=>$beta))->action() or if not exist
+ * -> Controller_Foo(array(0=>$bar, 1=>$gamma, 2=>delta, $alpha=>$beta))->action() or if not exist
+ * -> etc.
+ */
 class Gwilym_Router_Default extends Gwilym_Router
 {
 	/**
 	 * Map the given Route to a Request using the rules of this Router.
 	 *
 	 * @param Gwilym_Route $route
+	 *
 	 * @return Gwilym_Request
 	 */
-	public function getRequestForRoute (Gwilym_Route $route)
+	public function getRequestForRoute(Gwilym_Route $route)
 	{
 		$controller = $route->controller();
 		$arguments = $route->args();
@@ -52,7 +53,7 @@ class Gwilym_Router_Default extends Gwilym_Router
 		return $request;
 	}
 
-	public function getRouteForRequest (Gwilym_Request $request)
+	public function getRouteForRequest(Gwilym_Request $request)
 	{
 		$uri = $request->getUri();
 
@@ -61,27 +62,21 @@ class Gwilym_Router_Default extends Gwilym_Router
 		$uri = trim($uri, " \t\n\r\0\x0B/");
 		$args = array();
 
-		if (!$uri || $uri == 'index.php')
-		{
+		if (!$uri || $uri == 'index.php') {
 			// straight to default controller
 			$controller = 'Controller_' . $this->defaultController();
-		}
-		else
-		{
+		} else {
 			$uri = explode('/', $uri);
 
 			// find starting point: controllers can only be valid class names so invalid characters denote end of controller path
-			foreach ($uri as $index => $segment)
-			{
-				if (!is_numeric($segment) && preg_match('#^[a-zA-Z0-9_\x7f-\xff]*$#', $segment))
-				{
+			foreach ($uri as $index => $segment) {
+				if (!is_numeric($segment) && preg_match('#^[a-zA-Z0-9_\x7f-\xff]*$#', $segment)) {
 					// valid
 					continue;
 				}
 
 				// invalid: crop the uri and pre-fill args
-				while (count($uri) > $index)
-				{
+				while (count($uri) > $index) {
 					array_unshift($args, array_pop($uri));
 				}
 				break;
@@ -92,18 +87,15 @@ class Gwilym_Router_Default extends Gwilym_Router
 			array_walk($controllers, array('Gwilym_Router_Standard', 'walkUri'));
 
 			$found = false;
-			while (!empty($uri))
-			{
+			while (!empty($uri)) {
 				$controller = 'Controller_' . implode('_', $controllers) . '_Index';
-				if (class_exists($controller) && Gwilym_Reflection::isClassInstanciable($controller))
-				{
+				if (class_exists($controller) && Gwilym_Reflection::isClassInstanciable($controller)) {
 					$found = true;
 					break;
 				}
 
 				$controller = 'Controller_' . implode('_', $controllers);
-				if (class_exists($controller) && Gwilym_Reflection::isClassInstanciable($controller))
-				{
+				if (class_exists($controller) && Gwilym_Reflection::isClassInstanciable($controller)) {
 					$found = true;
 					break;
 				}
@@ -112,8 +104,7 @@ class Gwilym_Router_Default extends Gwilym_Router
 				array_unshift($args, array_pop($uri));
 			}
 
-			if (!$found)
-			{
+			if (!$found) {
 				$controller = 'Controller_' . $this->defaultController();
 			}
 		}

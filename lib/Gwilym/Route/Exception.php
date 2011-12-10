@@ -1,3 +1,5 @@
 <?php
 
-class Gwilym_Route_Exception extends Gwilym_Exception { }
+class Gwilym_Route_Exception extends Gwilym_Exception
+{
+}

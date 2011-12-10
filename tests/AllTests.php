@@ -13,18 +13,18 @@ class AllTests_Loader
 {
 	protected static $path;
 
-	public static function register ($path)
+	public static function register($path)
 	{
 		self::$path = realpath($path) . '/';
 		spl_autoload_register(array(__CLASS__, 'load'));
 	}
 
-	public static function unregister ()
+	public static function unregister()
 	{
 		spl_autoload_unregister(array(__CLASS__, 'load'));
 	}
 
-	public static function load ($class)
+	public static function load($class)
 	{
 		$file = str_replace('_', '/', $class);
 		@include self::$path . $file . '.php';
@@ -37,8 +37,10 @@ require_once dirname(__FILE__) . '/simpletest/unit_tester.php';
 require_once dirname(__FILE__) . '/simpletest/mock_objects.php';
 require_once dirname(__FILE__) . '/simpletest/collector.php';
 
-class AllTests extends TestSuite {
-	function AllTests() {
+class AllTests extends TestSuite
+{
+	function AllTests()
+	{
 		$this->TestSuite('All tests');
 		$this->addTestFile(dirname(__FILE__) . '/Tests/Gwilym/Request.php');
 		$this->addTestFile(dirname(__FILE__) . '/Tests/Gwilym/Router/Default.php');

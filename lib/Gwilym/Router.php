@@ -11,27 +11,29 @@ abstract class Gwilym_Router
 {
 	/** @var Gwilym_Route The route which is currently being followed from request to controller */
 	protected $_currentRoute;
-	
-	/**
-	* Map the given Route to a Request using the rules of this Router.
-	*
-	* @param Gwilym_Route $route
-	* @return Gwilym_Request
-	*/
-	abstract public function getRequestForRoute (Gwilym_Route $route);
 
 	/**
-	* Map the given Request to a Route using the rules of this Router.
-	* 
-	* @param Gwilym_Request $request
-	* @return Gwilym_Route
-	*/
-	abstract public function getRouteForRequest (Gwilym_Request $request);
+	 * Map the given Route to a Request using the rules of this Router.
+	 *
+	 * @param Gwilym_Route $route
+	 *
+	 * @return Gwilym_Request
+	 */
+	abstract public function getRequestForRoute(Gwilym_Route $route);
+
+	/**
+	 * Map the given Request to a Route using the rules of this Router.
+	 *
+	 * @param Gwilym_Request $request
+	 *
+	 * @return Gwilym_Route
+	 */
+	abstract public function getRouteForRequest(Gwilym_Request $request);
 
 	/**
 	 * The controller to use when no other can be successfully resolved.
 	 */
-	public function defaultController ()
+	public function defaultController()
 	{
 		return 'Index';
 	}
@@ -41,7 +43,7 @@ abstract class Gwilym_Router
 	 *
 	 * @return bool
 	 */
-	public function routeRequest (Gwilym_Request $request)
+	public function routeRequest(Gwilym_Request $request)
 	{
 		$route = $this->getRouteForRequest($request);
 		if (!$route) {
@@ -52,13 +54,13 @@ abstract class Gwilym_Router
 		$this->_currentRoute = null;
 		return $result;
 	}
-	
+
 	/**
 	 * Returns the route currently being followed by this request, if any.
 	 *
 	 * @return Gwilym_Route
 	 */
-	public function getCurrentRoute ()
+	public function getCurrentRoute()
 	{
 		return $this->_currentRoute;
 	}

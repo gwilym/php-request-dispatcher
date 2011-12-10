@@ -3,16 +3,19 @@
 class Gwilym_Route
 {
 	protected $_request;
+
 	protected $_controller;
+
 	protected $_args;
 
 	/**
-	* @param Gwilym_Request $request
-	* @param string $controller
-	* @param array $args
-	* @return Gwilym_Route
-	*/
-	public function __construct (Gwilym_Request $request, $controller, $args = array())
+	 * @param Gwilym_Request $request
+	 * @param string		 $controller
+	 * @param array		  $args
+	 *
+	 * @return Gwilym_Route
+	 */
+	public function __construct(Gwilym_Request $request, $controller, $args = array())
 	{
 		$this->_request = $request;
 		$this->_controller = $controller;
@@ -23,7 +26,7 @@ class Gwilym_Route
 	 * @todo consider making this return a View object from the Controller which is then displayed by the Router?
 	 * @return void
 	 */
-	public function follow ()
+	public function follow()
 	{
 		/** @var Gwilym_Controller */
 		$controller = new $this->_controller($this->_request, $this->_args);
@@ -32,7 +35,7 @@ class Gwilym_Route
 		// @todo will need to alter this if controllers are ever accessed via non-HTTP
 		if ($controller instanceof Gwilym_Controller_MethodSpecific) {
 			$method = $this->_request->method();
-			
+
 			if ($controller instanceof Gwilym_Controller_PostOnly && $method !== 'POST') {
 				$this->_request
 					->response()
@@ -55,33 +58,35 @@ class Gwilym_Route
 			$controller->after();
 		}
 
-		$controller->getView()
+		$controller
+			->getView()
 			->display();
 	}
 
-	public function request ()
+	public function request()
 	{
 		return $this->_request;
 	}
 
-	public function controller ()
+	public function controller()
 	{
 		return $this->_controller;
 	}
 
-	public function args ()
+	public function args()
 	{
 		return $this->_args;
 	}
 
 	/**
-	* Return a URI representing this route based on default router of the current request.
-	*
-	* @return string
-	*/
-	public function uri ()
+	 * Return a URI representing this route based on default router of the current request.
+	 *
+	 * @return string
+	 */
+	public function uri()
 	{
-		return $this->request()
+		return $this
+			->request()
 			->routeToUri($this);
 	}
 }
