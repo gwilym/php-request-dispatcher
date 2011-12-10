@@ -1,5 +1,10 @@
 <?php
 
+class Controller_Tests_Gwilym_Router_Default
+{
+
+}
+
 class Tests_Gwilym_Router_Default extends UnitTestCase
 {
 	public $router;
@@ -18,7 +23,7 @@ class Tests_Gwilym_Router_Default extends UnitTestCase
 			'/' => array('Controller_' . $default),
 			'/abstract' => array('Controller_' . $default, array('abstract')),
 			'/index.php' => array('Controller_' . $default),
-			'/product' => array('Controller_Product_' . $default),
+			'/tests/gwilym/router/default' => array('Controller_Tests_Gwilym_Router_Default'),
 			'/product/' => array('Controller_Product_' . $default),
 			'/product/admin/' => array('Controller_Product_Admin_' . $default),
 			'/product/admin/edit' => array('Controller_Product_Admin_' . $default, array('edit')),
@@ -74,7 +79,7 @@ class Tests_Gwilym_Router_Default extends UnitTestCase
 			}
 
 			$request = $this->router->getRequestForRoute($route);
-			$this->assertEqual($request->getUri(), $uri);
+			$this->assertEqual($request->getUri(), $uri, "Expected [$uri] for [$controller], got [" . $request->getUri() . "]");
 		}
 	}
 
@@ -86,7 +91,7 @@ class Tests_Gwilym_Router_Default extends UnitTestCase
 			$request->setUriParser(new Gwilym_UriParser_Fixed('', $uri));
 			$route = $this->router->getRouteForRequest($request);
 			$controller = $route->controller();
-			$this->assertEqual($controller, $expected[0], "uri '$uri' routed to $controller, should be {$expected[0]}");
+			$this->assertEqual($controller, $expected[0], "URI [$uri] routed to [$controller], should be [{$expected[0]}]");
 
 			if (isset($expected[1])) {
 				$args = $expected[1];

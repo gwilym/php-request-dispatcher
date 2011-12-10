@@ -42,12 +42,39 @@ class Gwilym_Router_Default extends Gwilym_Router
 	public function getRequestForRoute(Gwilym_Route $route)
 	{
 		$controller = $route->controller();
+
 		$arguments = $route->args();
 
 		$controller = explode('_', $controller);
-		$controller = array_map('lcfirst', $controller);
+		$firstSegment = array_shift($controller);
+		if ($firstSegment != 'Controller' || empty($controller)) {
+			return false;
+		}
 
-		$uri = '/' . implode('/', $controller);
+		$lastSegment = $controller[count($controller) - 1];
+		if (strtolower($lastSegment) == 'index') {
+			array_pop($controller);
+		}
+
+		$controller = array_map('lcfirst', $controller);
+		$controller = array_map('rawurlencode', $controller);
+		$uri = implode('/', $controller);
+		if ($uri) {
+			$uri = '/' . $uri;
+		}
+
+		foreach ($arguments as $key => $value) {
+			if (is_numeric($key)) {
+				$uri .= '/' . rawurlencode($value);
+				continue;
+			}
+
+			$uri .= '/' . rawurlencode($key) . '=' . rawurlencode($value);
+		}
+
+		if (!$uri) {
+			$uri = '/';
+		}
 
 		$request = new Gwilym_Request($uri);
 		return $request;
