@@ -3,10 +3,12 @@
 class Gwilym_UriParser_Fixed extends Gwilym_UriParser
 {
 	protected $_base;
+
 	protected $_docroot;
+
 	protected $_uri;
 
-	public function __construct ($base, $uri = null, $docroot = null)
+	public function __construct($base, $uri = null, $docroot = null)
 	{
 		$this->_base = $base;
 
@@ -19,17 +21,17 @@ class Gwilym_UriParser_Fixed extends Gwilym_UriParser
 		$this->_docroot = $docroot;
 	}
 
-	public function getBase ()
+	public function getBase()
 	{
 		return $this->_base;
 	}
 
-	public function getDocRoot ()
+	public function getDocRoot()
 	{
 		return $this->_docroot;
 	}
 
-	public function getUri ()
+	public function getUri()
 	{
 		return $this->_uri;
 	}

@@ -1,22 +1,25 @@
 <?php
 
 /**
-* This class implements a UriParser guessing scheme calculated off the location of the bootstrap file in the current URI.
-*
-* This is unnecessarily expensive to do on each request, but should work in most circumstances. On a predictable production server, it's recommended that the instance of this in the Gwilym_Request class is replaced with an instance of Gwilym_UriParser_Fixed instead.
-*/
+ * This class implements a UriParser guessing scheme calculated off the location of the bootstrap file in the current URI.
+ *
+ * This is unnecessarily expensive to do on each request, but should work in most circumstances. On a predictable production server, it's recommended that the instance of this in the Gwilym_Request class is replaced with an instance of Gwilym_UriParser_Fixed instead.
+ */
 class Gwilym_UriParser_Guess extends Gwilym_UriParser
 {
 	protected $_parsed = false;
-	
+
 	protected $_requestUri;
+
 	protected $_requestBaseDir;
 
 	protected $_base;
+
 	protected $_docRoot;
+
 	protected $_uri;
-	
-	protected function _parse ()
+
+	protected function _parse()
 	{
 		if ($this->_parsed) {
 			return;
@@ -38,7 +41,7 @@ class Gwilym_UriParser_Guess extends Gwilym_UriParser
 				$this->_base = '/' . implode('/', $subdir);
 				$this->_docRoot = implode(DIRECTORY_SEPARATOR, array_slice($base, 0, count($base) - $i));
 				if (!Gwilym_PHP::isWindows()) {
-					$this->_docRoot  = DIRECTORY_SEPARATOR . $this->_docRoot;
+					$this->_docRoot = DIRECTORY_SEPARATOR . $this->_docRoot;
 				}
 				$this->_uri = '/' . implode('/', array_slice($uri, $i));
 				$this->_parsed = true;
@@ -52,7 +55,7 @@ class Gwilym_UriParser_Guess extends Gwilym_UriParser
 		$this->_uri = $this->getRequestUri();
 	}
 
-	public function getRequestUri ()
+	public function getRequestUri()
 	{
 		if ($this->_requestUri === null) {
 			$this->_requestUri = $_SERVER['REQUEST_URI'];
@@ -61,14 +64,14 @@ class Gwilym_UriParser_Guess extends Gwilym_UriParser
 		return $this->_requestUri;
 	}
 
-	public function setRequestUri ($requestUri)
+	public function setRequestUri($requestUri)
 	{
 		$this->_requestUri = $requestUri;
 		$this->_parsed = false;
 		return $this;
 	}
 
-	public function getRequestBaseDir ()
+	public function getRequestBaseDir()
 	{
 		if ($this->_requestBaseDir === null) {
 			$this->_requestBaseDir = GWILYM_BASE_DIR;
@@ -77,26 +80,26 @@ class Gwilym_UriParser_Guess extends Gwilym_UriParser
 		return $this->_requestBaseDir;
 	}
 
-	public function setRequestBaseDir ($requestBaseDir)
+	public function setRequestBaseDir($requestBaseDir)
 	{
 		$this->_requestBaseDir = $requestBaseDir;
 		$this->_parsed = false;
 		return $this;
 	}
 
-	public function getBase ()
+	public function getBase()
 	{
 		$this->_parse();
 		return $this->_base;
 	}
 
-	public function getDocRoot ()
+	public function getDocRoot()
 	{
 		$this->_parse();
 		return $this->_docRoot;
 	}
 
-	public function getUri ()
+	public function getUri()
 	{
 		$this->_parse();
 		return $this->_uri;
