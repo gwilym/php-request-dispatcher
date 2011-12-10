@@ -47,4 +47,17 @@ class Gwilym_Router_Fixed extends Gwilym_Router
 		}
 		return false;
 	}
+
+	/**
+	 * Map the given Route to a Request using the rules of this Router.
+	 *
+	 * @param Gwilym_Route $route
+	 * @return Gwilym_Request
+	 */
+	public function getRequestForRoute (Gwilym_Route $route)
+	{
+		return false;
+	}
+
+
 }

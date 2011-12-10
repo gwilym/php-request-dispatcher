@@ -3,13 +3,35 @@
 ini_set('display_errors', 'on');
 error_reporting(E_ALL ^ E_DEPRECATED);
 
-require_once(dirname(dirname(__FILE__)) . '/bootstrap.php');
-
 if (defined('E_DEPRECATED')) {
 	error_reporting(E_ALL ^ E_DEPRECATED);
 } else {
 	error_reporting(E_ALL);
 }
+
+class AllTests_Loader
+{
+	protected static $path;
+
+	public static function register ($path)
+	{
+		self::$path = realpath($path) . '/';
+		spl_autoload_register(array(__CLASS__, 'load'));
+	}
+
+	public static function unregister ()
+	{
+		spl_autoload_unregister(array(__CLASS__, 'load'));
+	}
+
+	public static function load ($class)
+	{
+		$file = str_replace('_', '/', $class);
+		@include self::$path . $file . '.php';
+	}
+}
+
+AllTests_Loader::register(dirname(__FILE__) . '/../lib/');
 
 require_once dirname(__FILE__) . '/simpletest/unit_tester.php';
 require_once dirname(__FILE__) . '/simpletest/mock_objects.php';
@@ -18,22 +40,13 @@ require_once dirname(__FILE__) . '/simpletest/collector.php';
 class AllTests extends TestSuite {
 	function AllTests() {
 		$this->TestSuite('All tests');
-		$this->addTestClass('Tests_Gwilym_ArrayObject_FirstRead');
-		$this->addTestClass('Tests_Gwilym_ArrayObject_ReadOnly');
-		$this->addTestClass('Tests_Gwilym_Autoloader');
-		$this->addTestClass('Tests_Gwilym_Event');
-		$this->addTestClass('Tests_Gwilym_FSM');
-		$this->addTestClass('Tests_Gwilym_KeyStore_File');
-		$this->addTestClass('Tests_Gwilym_KeyStore_Mongodb');
-		$this->addTestClass('Tests_Gwilym_Request');
-		$this->addTestClass('Tests_Gwilym_Router_Standard_Reverse');
-		$this->addTestClass('Tests_Gwilym_String');
-		$this->addTestClass('Tests_Gwilym_UriParser_Fixed');
-		$this->addTestClass('Tests_Gwilym_UriParser_Guess');
+		$this->addTestFile(dirname(__FILE__) . '/Tests/Gwilym/Request.php');
+		$this->addTestFile(dirname(__FILE__) . '/Tests/Gwilym/Router/Default.php');
+		$this->addTestFile(dirname(__FILE__) . '/Tests/Gwilym/UriParser/Fixed.php');
+		$this->addTestFile(dirname(__FILE__) . '/Tests/Gwilym/UriParser/Guess.php');
 	}
 }
 
-Gwilym_Autoloader::addPath(dirname(__FILE__));
 $suite = new AllTests();
 
 if (@$_GET['coverage']) {

@@ -30,13 +30,13 @@ class Gwilym_Request
 
 	/** @var Gwilym_Response */
 	protected $_response;
-	
+
 	/** @var Gwilym_Router The router which is currently directing the request to the controller */
 	protected $_currentRouter;
 
 	/** @var string storage for original server request method (GET, POST, etc.) */
 	protected $_method;
-	
+
 	/** @var array<mixed> storage for original $_GET data */
 	public $get;
 
@@ -48,7 +48,7 @@ class Gwilym_Request
 
 	/** @var array<mixed> storage for original $_SERVER data */
 	public $server;
-	
+
 	/**
 	* Calling this ensures the session has been started
 	*
@@ -85,34 +85,32 @@ class Gwilym_Request
 	*/
 	public function __construct ($uri = null, $method = null, $get = null, $post = null, $cookie = null, $server = null, $session = null)
 	{
-		// @todo replace the parameters of this constructor with a class, such as Gwilym_Request_Construct ?
-		
+		// @todo somehow clean up this constructor, but retain its ability to lock down a request snapshot
+
 		if ($uri !== null) {
 			// if a specific uri is passed in for this request (usually for testing or perhaps for
 			// configurable slug urls) then set the uri parser to fixed
 			$this->setUriParser(new Gwilym_UriParser_Fixed('', $uri));
 		}
 
-		// create read-only copies of either provided GPCS data, or global data at time of instanciation
-		// this helps to avoid issues where other scripts may modify the original data
-		// note: exceptions will be thrown by Gwilym_ArrayObject_ReadOnly if anything attempts to modify these
-		$this->post = new Gwilym_ArrayObject_ReadOnly($post === null ? $_POST : $post);
-		$this->get = new Gwilym_ArrayObject_ReadOnly($get === null ? $_GET : $get);
-		$this->cookie = new Gwilym_ArrayObject_ReadOnly($cookie === null ? $_COOKIE : $cookie);
-		$this->server = new Gwilym_ArrayObject_ReadOnly($server === null ? $_SERVER : $server);
-		
+		// @todo restore read-only protection for GPCS data, this was removed when ArrayObject_ReadOnly was dumped
+		$this->post = $post === null ? $_POST : $post;
+		$this->get = $get === null ? $_GET : $get;
+		$this->cookie = $cookie === null ? $_COOKIE : $cookie;
+		$this->server = $server === null ? $_SERVER : $server;
+
 		if ($session === null) {
 			@session_start();
 			$this->session = $_SESSION;
 		} else {
 			$this->session = $session;
 		}
-		
+
 		if ($method === null) {
 			$this->_method = isset($this->server['REQUEST_METHOD']) ? strtoupper($this->server['REQUEST_METHOD']) : '';
 		} else {
 			$this->_method = strtoupper($method);
-		}		
+		}
 	}
 
 	/**
@@ -161,12 +159,12 @@ class Gwilym_Request
 	{
 		$this->_routers[] = $router;
 	}
-	
+
 	public function currentRouter ()
 	{
 		return $this->_currentRouter;
 	}
-	
+
 	public function currentRoute ()
 	{
 		return $this->getCurrentRouter()->getCurrentRoute();
@@ -319,14 +317,14 @@ class Gwilym_Request
 			// get
 			return isset($this->_cookie[$key]) ? $this->_cookie[$key] : null;
 		}
-		
+
 		if ($value === null) {
 			// delete
 			unset($this->_cookie[$key]);
 			__gwilym_request_setcookie($key, '', time() - 3600, $path, $domain, $secure, $httponly);
 			return $this;
 		}
-		
+
 		// set
 		$this->_cookie[$key] = $value;
 		__gwilym_request_setcookie($key, $value, $expire, $path, $domain, $secure, $httponly);

@@ -1,6 +1,6 @@
 <?php
 
-class Tests_Gwilym_Router_Standard_Reverse extends UnitTestCase
+class Tests_Gwilym_Router_Default extends UnitTestCase
 {
 	public $router;
 
@@ -8,7 +8,7 @@ class Tests_Gwilym_Router_Standard_Reverse extends UnitTestCase
 
 	public function __construct ()
 	{
-		$this->router = new Gwilym_Router_Standard_Reverse;
+		$this->router = new Gwilym_Router_Default();
 
 		$default = $this->router->defaultController();
 
@@ -67,8 +67,8 @@ class Tests_Gwilym_Router_Standard_Reverse extends UnitTestCase
 				$route = new Gwilym_Route($request, $controller);
 			}
 
-			$this->assertEqual($this->router->getUriForRoute($route), $uri);
-
+			$request = $this->router->getRequestForRoute($route);
+			$this->assertEqual($request->getUri(), $uri);
 		}
 	}
 

@@ -30,8 +30,28 @@
 * -> Controller_Foo(array(0=>$bar, 1=>$gamma, 2=>delta, $alpha=>$beta))->action() or if not exist
 * -> etc.
 */
-class Gwilym_Router_Standard_Reverse extends Gwilym_Router_Standard
+class Gwilym_Router_Default extends Gwilym_Router
 {
+	/**
+	 * Map the given Route to a Request using the rules of this Router.
+	 *
+	 * @param Gwilym_Route $route
+	 * @return Gwilym_Request
+	 */
+	public function getRequestForRoute (Gwilym_Route $route)
+	{
+		$controller = $route->controller();
+		$arguments = $route->args();
+
+		$controller = explode('_', $controller);
+		$controller = array_map('lcfirst', $controller);
+
+		$uri = '/' . implode('/', $controller);
+
+		$request = new Gwilym_Request($uri);
+		return $request;
+	}
+
 	public function getRouteForRequest (Gwilym_Request $request)
 	{
 		$uri = $request->getUri();

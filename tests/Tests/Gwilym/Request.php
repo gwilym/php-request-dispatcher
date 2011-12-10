@@ -8,42 +8,6 @@ class Gwilym_Request_Test extends Gwilym_Request
 	}
 }
 
-class TestController_Transfer_From extends Gwilym_Controller
-{
-	public function action ()
-	{
-		Tests_Gwilym_Request::$testData = 2;
-		$this->request()->transfer('TestController_Transfer_To');
-	}
-}
-
-class TestController_Transfer_FromUri extends Gwilym_Controller
-{
-	public function action ()
-	{
-		Tests_Gwilym_Request::$testData = 2;
-		$this->request()->transfer('to');
-	}
-}
-
-class TestController_Transfer_To extends Gwilym_Controller
-{
-	public function action ()
-	{
-		Tests_Gwilym_Request::$testData = 3;
-		$this->view(new Gwilym_View_None($this));
-	}
-}
-
-class TestController_Transfer_Loop extends Gwilym_Controller
-{
-	public function action ()
-	{
-		Tests_Gwilym_Request::$testData++;
-		$this->request()->transfer('TestController_Transfer_Loop');
-	}
-}
-
 class Tests_Gwilym_Request extends UnitTestCase
 {
 	public static $testData;
@@ -78,6 +42,7 @@ class Tests_Gwilym_Request extends UnitTestCase
 		$this->assertIsA($routers[0], 'Gwilym_Router_Fixed');
 	}
 
+	/*
 	public function testTransferToController ()
 	{
 		$router = new Gwilym_Router_Fixed;
@@ -140,6 +105,7 @@ class Tests_Gwilym_Request extends UnitTestCase
 		$route = $request->route('Controller_Admin_Product');
 		$this->assertFalse($request->routeToUri($route));
 	}
+	*/
 
 	public function testRequestGuessesUriByDefault ()
 	{
